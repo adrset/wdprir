@@ -11,6 +11,7 @@ public class SequentialWorkerWithLatch extends SequantialWorker {
        this.latch = latch;
     }
 
+    @Override
     public double add(){
         double value = super.add();
         latch.countDown();
