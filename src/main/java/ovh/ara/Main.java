@@ -7,6 +7,7 @@ import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 import org.jfree.ui.ApplicationFrame;
 import ovh.ara.adders.IAdder;
+import ovh.ara.adders.RaceAdder;
 import ovh.ara.adders.SynchronousAdder;
 import ovh.ara.adders.ThreaderAdder;
 
@@ -45,16 +46,17 @@ public class Main {
         timeAverages = new double[iterations];
         s = br.readLine();
         this.retries = Integer.parseInt(s);
-        System.out.println("Sync/Threader (1/2)");
+        System.out.println("Sync/Threaded/Race (1/2/3)");
         s = br.readLine();
         int choice = Integer.parseInt(s);
         if (choice == 1) {
             adder = new SynchronousAdder();
         } else if (choice == 2) {
             adder = new ThreaderAdder();
-
+        } else if (choice == 3){
+            adder = new RaceAdder();
         } else {
-            throw new Exception("Choose 1 or 2!");
+            throw new Exception("Choose 1, 2 or 3!");
         }
     }
 
