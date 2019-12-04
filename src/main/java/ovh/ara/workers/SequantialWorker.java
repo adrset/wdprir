@@ -1,5 +1,5 @@
-package main.java.ovh.ara;
-public class Worker extends Thread {
+package ovh.ara.workers;
+public class SequantialWorker implements IWorker {
     private int offset;
     private int size;
     private double array[];
@@ -14,7 +14,7 @@ public class Worker extends Thread {
     }
 
 
-    public Worker(int offset, int size, double array[]){
+    public SequantialWorker(int offset, int size, double array[]){
         this.array = array;
         this.offset = offset;
         this.size = size;
@@ -22,13 +22,15 @@ public class Worker extends Thread {
 
     @Override
     public void run() {
-        addSequentional();
+        value = add();
     }
 
-    private void addSequentional(){
+    public double add(){
+        double value = 0;
         for (int ii=offset; ii<size + offset; ii++){
             array[ii] = Math.log(array[ii]);
             value += array[ii];
         }
+        return value;
     }
 }

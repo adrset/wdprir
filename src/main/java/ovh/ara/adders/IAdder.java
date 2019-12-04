@@ -1,4 +1,4 @@
-package main.java.ovh.ara;
+package ovh.ara.adders;
 
 public interface IAdder {
 

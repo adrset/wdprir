@@ -1,4 +1,4 @@
-package main.java.ovh.ara;
+package ovh.ara.adders;
 
 public class SynchronousAdder implements IAdder {
     private double array[];
@@ -17,6 +17,7 @@ public class SynchronousAdder implements IAdder {
     public void init(){
         int size = (1 << (currentIteration + 1));
         this.array = new double[size];
+        clearArray();
     }
 
 
@@ -35,12 +36,8 @@ public class SynchronousAdder implements IAdder {
 
         double value = 0;
         for (int ii=0; ii<array.length; ii++){
-            //System.out.println("el:" + array[ii] + " " + Math.log(array[ii]));
-
             value += Math.log(array[ii]);
         }
-
-        //System.out.println(array.length);
 
         return value;
     }

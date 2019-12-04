@@ -1,4 +1,8 @@
-package main.java.ovh.ara;
+package ovh.ara.adders;
+
+import ovh.ara.workers.IWorker;
+import ovh.ara.workers.RaceWorker;
+import ovh.ara.workers.SequantialWorker;
 
 import java.util.concurrent.atomic.AtomicIntegerArray;
 
@@ -7,13 +11,19 @@ public class RaceAdder implements IAdder{
     private AtomicIntegerArray atomics;
     private int currentIteration = 0;
     private int processors;
-    private Worker runnables[];
+    private IWorker runnables[];
+    private Thread threads[];
 
     public void init(){
         int size = (1 << (currentIteration + 1));
         this.array = new double[size];
+        clearArray();
+        // default zeros
         atomics = new AtomicIntegerArray(size);
-
+        for (int ii =0; ii<processors;ii++ ){
+            runnables[ii] = new RaceWorker(this.array, atomics);
+            threads[ii] = new Thread(runnables[ii]);
+        }
     }
 
     public void setCurrentIteration(int a){
@@ -29,10 +39,9 @@ public class RaceAdder implements IAdder{
     public RaceAdder() {
         processors = Runtime.getRuntime().availableProcessors();
         System.out.println("CPU cores: " + processors);
-        runnables = new Worker[processors];
-        for (int ii =0; ii<processors;ii++ ){
-            runnables[ii] = new Worker(0, 0, this.array);
-        }
+        runnables = new SequantialWorker[processors];
+        threads = new Thread[processors];
+
     }
 
 
@@ -47,22 +56,24 @@ public class RaceAdder implements IAdder{
         int size = array.length / processors;
 
         for (int ii =0; ii<processors;ii++ ){
-            runnables[ii].start();
+
+            threads[ii].start();
         }
-        //double value = 0;
+        double value = 0;
 
         try {
 
             for (int ii =0; ii<processors;ii++ ){
-                runnables[ii].join();
+                threads[ii].join();
             }
 
-//            for (int ii =0; ii<processors;ii++ ){
-//                value += runnables[ii].getValue();
-//            }
+            for (int ii =0; ii<runnables.length;ii++ ){
+                value += runnables[ii].getValue();
+            }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return 0;//value;
+        return value;
     }
 }

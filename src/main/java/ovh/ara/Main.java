@@ -1,4 +1,4 @@
-package main.java.ovh.ara;
+package ovh.ara;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
@@ -6,9 +6,11 @@ import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 import org.jfree.ui.ApplicationFrame;
+import ovh.ara.adders.IAdder;
+import ovh.ara.adders.SynchronousAdder;
+import ovh.ara.adders.ThreaderAdder;
 
 import java.io.*;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -61,7 +63,6 @@ public class Main {
     public void measure(){
         while (currentIteration < iterations) {
             adder.init();
-            adder.clearArray();
             double average = 0;
             for (int ii=0;ii<this.retries;ii++){
                 double startTime = System.nanoTime();
