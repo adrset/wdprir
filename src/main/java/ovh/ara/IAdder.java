@@ -6,5 +6,9 @@ public interface IAdder {
 
     void clearArray();
 
-    void addT();
+    double add();
+
+    double[] getArray();
+
+    void setCurrentIteration(int a);
 }

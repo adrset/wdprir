@@ -3,6 +3,16 @@ public class Worker extends Thread {
     private int offset;
     private int size;
     private double array[];
+    private double value = 0;
+
+    public double getValue() {
+        return value;
+    }
+
+    public void reset(){
+        value = 0;
+    }
+
 
     public Worker(int offset, int size, double array[]){
         this.array = array;
@@ -16,9 +26,9 @@ public class Worker extends Thread {
     }
 
     private void addSequentional(){
-        double value = 0;
-        for (int ii=0; ii<size; ii++){
-            value += Math.log(array[offset + ii]);
+        for (int ii=offset; ii<size + offset; ii++){
+            array[ii] = Math.log(array[ii]);
+            value += array[ii];
         }
     }
 }

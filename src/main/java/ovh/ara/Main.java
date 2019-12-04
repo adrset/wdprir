@@ -1,6 +1,4 @@
 package main.java.ovh.ara;
-
-import org.jfree.ui.ApplicationFrame;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
@@ -8,31 +6,32 @@ import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 import org.jfree.ui.ApplicationFrame;
-import org.jfree.ui.RefineryUtilities;
+
 import java.io.*;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class App {
-    private double array[];
+public class Main {
     private int retries = 0;
     private double timeAverages[];
     private int iterations = 0;
     private int currentIteration = 0;
 
-    public App(){
+    IAdder adder;
 
+    public Main(){
     }
 
     public Map<Integer, Double> getMapping(){
-        Map<Integer, Double> map = new HashMap<>();
+        Map<Integer, Double> map = new LinkedHashMap<>();
         for (int ii=0; ii< this.timeAverages.length; ii++) {
             map.put(new Integer((1 << ii)), new Double(this.timeAverages[ii]));
+            //System.out.println(ii + "  " + this.timeAverages[ii]);
         }
 
         return map;
     }
-
 
     public void readUserInput() throws Exception{
 
@@ -44,57 +43,53 @@ public class App {
         timeAverages = new double[iterations];
         s = br.readLine();
         this.retries = Integer.parseInt(s);
-    }
+        System.out.println("Sync/Threader (1/2)");
+        s = br.readLine();
+        int choice = Integer.parseInt(s);
+        if (choice == 1) {
+            adder = new SynchronousAdder();
+        } else if (choice == 2) {
+            adder = new ThreaderAdder();
 
-    private void init(){
-        int size = (1 << (currentIteration + 1));
-        this.array = new double[size];
-    }
-
-
-    private void clearArray(){
-        for (int ii=0; ii<array.length; ii++){
-            array[ii] = Math.exp(1);
+        } else {
+            throw new Exception("Choose 1 or 2!");
         }
-    }
-
-    private void addSequentional(){
-        double value = 0;
-        System.out.println(array.length);
-        for (int ii=0; ii<array.length; ii++){
-            value += Math.log(array[ii]);
-        }
-
     }
 
 
 
     public void measure(){
         while (currentIteration < iterations) {
-            init();
-            clearArray();
+            adder.init();
+            adder.clearArray();
             double average = 0;
             for (int ii=0;ii<this.retries;ii++){
                 double startTime = System.nanoTime();
-                addSequentional();
+                try {
+                    double val = adder.add();
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
 
                 double elapsed = System.nanoTime() - startTime;
-                average += (elapsed / Math.pow(10, 6));
+                average += elapsed;
+                //System.out.println(currentIteration + " " + elapsed);
             }
 
-            average/=this.retries;
-            timeAverages[currentIteration++] = average;
+            timeAverages[currentIteration++] = average / (this.retries);
+            adder.setCurrentIteration(currentIteration);
         }
 
     }
 
 
     public void writeToFile() throws Exception{
-        if (array == null) {
+        if (adder.getArray() == null) {
             return;
         }
 
-        FileWriter writer = new FileWriter(new File("output.txt"));
+        FileWriter writer = new FileWriter(new File("output" + (adder instanceof SynchronousAdder) + ".txt"));
         BufferedWriter outputWriter = null;
         outputWriter = new BufferedWriter(writer);
 
@@ -115,16 +110,20 @@ public class App {
 
     public static void main(String argsd[]){
 
-        App app = new App();
+        Main app = new Main();
         try {
+
             app.readUserInput();
             app.measure();
             app.writeToFile();
-            new XYSeriesDemo("title",app.getMapping());
+            XYSeriesDemo t = new XYSeriesDemo("title",app.getMapping());
+            t.setVisible(true);
         } catch (Exception e) {
 
         }
     }
+
+
 }
 
 class XYSeriesDemo extends ApplicationFrame {
@@ -138,8 +137,9 @@ class XYSeriesDemo extends ApplicationFrame {
 
         super(title);
         final XYSeries series = new XYSeries("Random Data");
-        for (Integer ii : map.keySet()){
+        for (Integer ii : map.keySet()) {
             series.add(ii.intValue(), map.get(ii).doubleValue());
+           // System.out.println(ii.intValue() + "  " + map.get(ii).doubleValue());
         }
         final XYSeriesCollection data = new XYSeriesCollection(series);
         final JFreeChart chart = ChartFactory.createXYLineChart(
@@ -159,4 +159,3 @@ class XYSeriesDemo extends ApplicationFrame {
 
     }
 }
-
