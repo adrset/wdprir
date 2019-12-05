@@ -1,7 +1,12 @@
 package ovh.ara.adders;
 
+import ovh.ara.threads.IThreadService;
+import ovh.ara.threads.SimpleThreadService;
+import ovh.ara.threads.ThreadPoolService;
 import ovh.ara.workers.IWorker;
 import ovh.ara.workers.RaceWorker;
+import ovh.ara.workers.RaceWorkerWithLatch;
+import ovh.ara.workers.SequentialWorkerWithLatch;
 
 import java.util.concurrent.atomic.AtomicIntegerArray;
 
@@ -11,7 +16,7 @@ public class RaceAdder implements IAdder{
     private int currentIteration = 0;
     private int processors;
     private IWorker runnables[];
-    private Thread threads[];
+    private IThreadService exectutor;
 
     public void init(){
         int size = (1 << (currentIteration + 1));
@@ -20,10 +25,6 @@ public class RaceAdder implements IAdder{
         // default zeros
 
         atomics = new AtomicIntegerArray(size);
-        for (int ii =0; ii<processors;ii++ ){
-            runnables[ii] = new RaceWorker(this.array, atomics);
-            threads[ii] = new Thread(runnables[ii]);
-        }
     }
 
     public void setCurrentIteration(int a){
@@ -40,7 +41,7 @@ public class RaceAdder implements IAdder{
         processors = Runtime.getRuntime().availableProcessors();
         System.out.println("CPU cores: " + processors);
         runnables = new RaceWorker[processors];
-        threads = new Thread[processors];
+        exectutor = new ThreadPoolService();
 
     }
 
@@ -54,18 +55,21 @@ public class RaceAdder implements IAdder{
 
     public double add(){
         int size = array.length / processors;
+        exectutor.init();
 
         for (int ii =0; ii<processors;ii++ ){
-
-            threads[ii].start();
+            RaceWorkerWithLatch sw =  new RaceWorkerWithLatch(this.array, atomics);
+            runnables[ii] = sw;
+            sw.setLatch(exectutor.getLatch());
+        }
+        for (int ii =0; ii<processors;ii++ ){
+            exectutor.submit(runnables[ii]);
         }
         double value = 0;
 
         try {
 
-            for (int ii =0; ii<processors;ii++ ){
-                threads[ii].join();
-            }
+            exectutor.await();
 
             for (int ii =0; ii<runnables.length;ii++ ){
                 value += runnables[ii].getValue();

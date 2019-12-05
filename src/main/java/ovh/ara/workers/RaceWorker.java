@@ -1,5 +1,8 @@
 package ovh.ara.workers;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicIntegerArray;
 
 public class RaceWorker implements IWorker  {
