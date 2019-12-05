@@ -1,15 +1,21 @@
 package ovh.ara.workers;
 
+import ovh.ara.threads.ILatchable;
+
 import java.util.concurrent.CountDownLatch;
 
-public class SequentialWorkerWithLatch extends SequantialWorker {
+public class SequentialWorkerWithLatch extends SequantialWorker implements ILatchable {
 
     CountDownLatch latch;
 
-    public SequentialWorkerWithLatch(int offset, int size, double array[], CountDownLatch latch){
+    public SequentialWorkerWithLatch(int offset, int size, double array[]){
        super(offset, size, array);
-       this.latch = latch;
     }
+
+    public void setLatch(CountDownLatch latch) {
+        this.latch = latch;
+    }
+
 
     @Override
     public double add(){
@@ -17,5 +23,7 @@ public class SequentialWorkerWithLatch extends SequantialWorker {
         latch.countDown();
         return value;
     }
+
+
 
 }

@@ -25,4 +25,11 @@ public class ThreadPool implements IThreadService {
     public void await() throws Exception{
         latch.await();
     }
+
+
+    public CountDownLatch getLatch(){
+        return latch;
+    }
+
+
 }
