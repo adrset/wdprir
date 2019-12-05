@@ -143,11 +143,14 @@ class XYSeriesDemo extends ApplicationFrame {
             series.add(ii.intValue(), map.get(ii).doubleValue());
            // System.out.println(ii.intValue() + "  " + map.get(ii).doubleValue());
         }
+        this.setBounds(210, 10, 1280, 720);
+        this.toFront();
+        this.repaint();
         final XYSeriesCollection data = new XYSeriesCollection(series);
         final JFreeChart chart = ChartFactory.createXYLineChart(
-                "XY Series Demo",
-                "X",
-                "Y",
+                "Time complexity",
+                "time (ns)",
+                "array size",
                 data,
                 PlotOrientation.VERTICAL,
                 true,
