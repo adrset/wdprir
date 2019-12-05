@@ -53,7 +53,7 @@ public class Main {
         } else if (choice == 3){
             adder = new RaceAdder();
         } else if (choice == 4){
-            adder = new ExecutorServiceAdder();
+            adder = new PooledAdder();
         } else {
             throw new Exception("Choose 1, 2 or 3!");
         }

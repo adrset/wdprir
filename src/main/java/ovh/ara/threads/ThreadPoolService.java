@@ -4,12 +4,12 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class ThreadPool implements IThreadService {
+public class ThreadPoolService implements IThreadService {
     private ExecutorService executor;
     private CountDownLatch latch;
     private int processors;
 
-    public ThreadPool(){
+    public ThreadPoolService(){
         processors = Runtime.getRuntime().availableProcessors();
         executor = Executors.newFixedThreadPool(processors);
     }

@@ -1,17 +1,13 @@
 package ovh.ara.adders;
 
 import ovh.ara.threads.IThreadService;
-import ovh.ara.threads.ThreadPool;
+import ovh.ara.threads.ThreadPoolService;
 import ovh.ara.workers.IWorker;
 import ovh.ara.workers.SequantialWorker;
 import ovh.ara.workers.SequentialWorkerWithLatch;
 
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
-
-public class ExecutorServiceAdder implements IAdder{
+public class PooledAdder implements IAdder{
     private double array[];
     private int currentIteration = 0;
     private int processors;
@@ -34,11 +30,11 @@ public class ExecutorServiceAdder implements IAdder{
     }
 
 
-    public ExecutorServiceAdder() {
+    public PooledAdder() {
         processors = Runtime.getRuntime().availableProcessors();
         System.out.println("CPU cores: " + processors);
         runnables = new SequantialWorker[processors];
-        executor = new ThreadPool();
+        executor = new ThreadPoolService();
 
     }
 
