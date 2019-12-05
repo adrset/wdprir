@@ -43,7 +43,7 @@ public class Main {
         timeAverages = new double[iterations];
         s = br.readLine();
         this.retries = Integer.parseInt(s);
-        System.out.println("Sync/Threaded/Race/ConstPoolThreaded (1/2/3/4)");
+        System.out.println("Sync/Threaded/Race/ConstPoolThreaded/RaceAdderWitBlocks (1/2/3/4/5)");
         s = br.readLine();
         int choice = Integer.parseInt(s);
         if (choice == 1) {
@@ -54,7 +54,9 @@ public class Main {
             adder = new RaceAdder();
         } else if (choice == 4){
             adder = new PooledAdder();
-        } else {
+        } else if (choice == 5){
+            adder = new BlockRaceAdder();
+        }else {
             throw new Exception("Choose 1, 2 or 3!");
         }
     }

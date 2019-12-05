@@ -11,12 +11,12 @@ import ovh.ara.workers.SequentialWorkerWithLatch;
 import java.util.concurrent.atomic.AtomicIntegerArray;
 
 public class RaceAdder implements IAdder{
-    private double array[];
-    private AtomicIntegerArray atomics;
-    private int currentIteration = 0;
-    private int processors;
-    private IWorker runnables[];
-    private IThreadService exectutor;
+    protected double array[];
+    protected AtomicIntegerArray atomics;
+    protected int currentIteration = 0;
+    protected int processors;
+    protected IWorker runnables[];
+    protected IThreadService exectutor;
 
     public void init(){
         int size = (1 << (currentIteration + 1));
