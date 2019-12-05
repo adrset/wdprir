@@ -149,8 +149,8 @@ class XYSeriesDemo extends ApplicationFrame {
         final XYSeriesCollection data = new XYSeriesCollection(series);
         final JFreeChart chart = ChartFactory.createXYLineChart(
                 "Time complexity",
-                "time (ns)",
                 "array size",
+                "time (ns)",
                 data,
                 PlotOrientation.VERTICAL,
                 true,
