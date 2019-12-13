@@ -17,6 +17,8 @@ public class Main {
     private double timeAverages[];
     private int iterations = 0;
     private int currentIteration = 0;
+    private int maxBlockSize = 0;
+
 
     IAdder adder;
 
@@ -55,6 +57,9 @@ public class Main {
         } else if (choice == 4){
             adder = new PooledAdder();
         } else if (choice == 5){
+            System.out.println("Please specify max block size 2^x where x=?");
+            s = br.readLine();
+            this.maxBlockSize = Integer.parseInt(s);
             adder = new BlockRaceAdder();
         }else {
             throw new Exception("Choose 1, 2 or 3!");
@@ -64,6 +69,10 @@ public class Main {
 
 
     public void measure(){
+        if (maxBlockSize > 0) {
+            measureSameSizeArray();
+            return;
+        }
         while (currentIteration < iterations) {
             adder.init();
             double average = 0;
@@ -84,6 +93,40 @@ public class Main {
             timeAverages[currentIteration++] = average / (this.retries);
             adder.setCurrentIteration(currentIteration);
         }
+
+    }
+
+    public void measureSameSizeArray(){
+        // iterations -> max size of array
+
+        try {
+            BlockRaceAdder blockAdder = (BlockRaceAdder) adder;
+            adder.setCurrentIteration(iterations);
+            this.timeAverages = new double[maxBlockSize];
+            while (currentIteration < maxBlockSize) {
+                blockAdder.setBlockSize(currentIteration);
+                adder.init();
+                double average = 0;
+                for (int ii=0;ii<this.retries;ii++){
+                    double startTime = System.nanoTime();
+                    try {
+                        double val = adder.add();
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+                    double elapsed = System.nanoTime() - startTime;
+                    average += elapsed;
+                }
+
+                timeAverages[currentIteration++] = average / (this.retries);
+            }
+            System.out.println(timeAverages);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
 
     }
 

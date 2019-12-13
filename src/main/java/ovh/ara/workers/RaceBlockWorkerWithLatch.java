@@ -17,13 +17,11 @@ public class RaceBlockWorkerWithLatch extends RaceWorkerWithLatch {
             if(locks.getAndSet(ii, 1) != 1){
 
                 for (int jj=ii; jj< ii + blockSize; jj++){
-                    //System.out.println(jj+" + " + (ii+blockSize) + " max " + array.length );
                     value += array[jj];
                 }
             }
         }
         latch.countDown();
-        System.out.println("countdown");
         return value;
     }
 

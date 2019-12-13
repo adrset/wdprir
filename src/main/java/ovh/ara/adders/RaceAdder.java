@@ -1,12 +1,10 @@
 package ovh.ara.adders;
 
 import ovh.ara.threads.IThreadService;
-import ovh.ara.threads.SimpleThreadService;
 import ovh.ara.threads.ThreadPoolService;
 import ovh.ara.workers.IWorker;
 import ovh.ara.workers.RaceWorker;
 import ovh.ara.workers.RaceWorkerWithLatch;
-import ovh.ara.workers.SequentialWorkerWithLatch;
 
 import java.util.concurrent.atomic.AtomicIntegerArray;
 
@@ -15,8 +13,8 @@ public class RaceAdder implements IAdder{
     protected AtomicIntegerArray atomics;
     protected int currentIteration = 0;
     protected int processors;
-    protected IWorker runnables[];
-    protected IThreadService exectutor;
+    protected IWorker[] runnables;
+    protected IThreadService executor;
 
     public void init(){
         int size = (1 << (currentIteration + 1));
@@ -41,7 +39,7 @@ public class RaceAdder implements IAdder{
         processors = Runtime.getRuntime().availableProcessors();
         System.out.println("CPU cores: " + processors);
         runnables = new RaceWorker[processors];
-        exectutor = new ThreadPoolService();
+        executor = new ThreadPoolService();
 
     }
 
@@ -54,22 +52,21 @@ public class RaceAdder implements IAdder{
     }
 
     public double add(){
-        int size = array.length / processors;
-        exectutor.init();
+        executor.init();
 
         for (int ii =0; ii<processors;ii++ ){
             RaceWorkerWithLatch sw =  new RaceWorkerWithLatch(this.array, atomics);
             runnables[ii] = sw;
-            sw.setLatch(exectutor.getLatch());
+            sw.setLatch(executor.getLatch());
         }
         for (int ii =0; ii<processors;ii++ ){
-            exectutor.submit(runnables[ii]);
+            executor.submit(runnables[ii]);
         }
         double value = 0;
 
         try {
 
-            exectutor.await();
+            executor.await();
 
             for (int ii =0; ii<runnables.length;ii++ ){
                 value += runnables[ii].getValue();
