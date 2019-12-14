@@ -1,13 +1,15 @@
-package ovh.ara.workers;
+package ovh.ara.Lab1.workers;
+
+import ovh.ara.Lab1.threads.ILatchable;
 
 import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.atomic.AtomicIntegerArray;
 
-public class RaceWorkerWithLatch extends RaceWorker {
+public class SequentialWorkerWithLatch extends SequantialWorker implements ILatchable {
+
     CountDownLatch latch;
 
-    public RaceWorkerWithLatch(double array[], AtomicIntegerArray atomics){
-        super(array, atomics);
+    public SequentialWorkerWithLatch(int offset, int size, double array[]){
+       super(offset, size, array);
     }
 
     public void setLatch(CountDownLatch latch) {
@@ -21,4 +23,7 @@ public class RaceWorkerWithLatch extends RaceWorker {
         latch.countDown();
         return value;
     }
+
+
+
 }

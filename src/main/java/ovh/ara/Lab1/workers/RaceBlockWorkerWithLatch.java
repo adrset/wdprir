@@ -1,4 +1,4 @@
-package ovh.ara.workers;
+package ovh.ara.Lab1.workers;
 
 import java.util.concurrent.atomic.AtomicIntegerArray;
 

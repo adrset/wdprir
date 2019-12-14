@@ -1,4 +1,4 @@
-package ovh.ara.threads;
+package ovh.ara.Lab1.threads;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
@@ -17,7 +17,13 @@ public class ThreadPoolService implements IThreadService {
     public void init() {
         latch = new CountDownLatch(processors);
     }
+    public void init(int a) {
+        latch = new CountDownLatch(a);
+    }
 
+    public void shutdown(){
+        executor.shutdown();
+    }
     public void submit(Runnable r) {
         executor.submit(r);
     }

@@ -1,4 +1,4 @@
-package ovh.ara.threads;
+package ovh.ara.Lab1.threads;
 
 import java.util.concurrent.CountDownLatch;
 

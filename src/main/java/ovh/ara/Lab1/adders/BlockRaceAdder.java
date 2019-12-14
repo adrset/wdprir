@@ -1,6 +1,6 @@
-package ovh.ara.adders;
+package ovh.ara.Lab1.adders;
 
-import ovh.ara.workers.RaceBlockWorkerWithLatch;
+import ovh.ara.Lab1.workers.RaceBlockWorkerWithLatch;
 
 public class BlockRaceAdder extends RaceAdder {
     private int blockSize;

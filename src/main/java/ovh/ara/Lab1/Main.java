@@ -1,4 +1,4 @@
-package ovh.ara;
+package ovh.ara.Lab1;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
@@ -6,7 +6,7 @@ import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 import org.jfree.ui.ApplicationFrame;
-import ovh.ara.adders.*;
+import ovh.ara.Lab1.adders.*;
 
 import java.io.*;
 import java.util.LinkedHashMap;

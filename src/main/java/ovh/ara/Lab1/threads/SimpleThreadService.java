@@ -1,4 +1,4 @@
-package ovh.ara.threads;
+package ovh.ara.Lab1.threads;
 
 import java.util.concurrent.CountDownLatch;
 
@@ -18,10 +18,19 @@ public class SimpleThreadService implements IThreadService {
         lastIndex = 0;
     }
 
+    public void shutdown(){
+
+    }
+
     public void submit(Runnable r) {
         threads[lastIndex] = new Thread(r);
         threads[lastIndex++].start();
     }
+
+    public void init(int a) {
+        latch = new CountDownLatch(a);
+    }
+
 
     public void await() throws Exception{
         latch.await();

@@ -1,10 +1,10 @@
-package ovh.ara.adders;
+package ovh.ara.Lab1.adders;
 
-import ovh.ara.threads.IThreadService;
-import ovh.ara.threads.ThreadPoolService;
-import ovh.ara.workers.IWorker;
-import ovh.ara.workers.RaceWorker;
-import ovh.ara.workers.RaceWorkerWithLatch;
+import ovh.ara.Lab1.threads.IThreadService;
+import ovh.ara.Lab1.threads.ThreadPoolService;
+import ovh.ara.Lab1.workers.IWorker;
+import ovh.ara.Lab1.workers.RaceWorker;
+import ovh.ara.Lab1.workers.RaceWorkerWithLatch;
 
 import java.util.concurrent.atomic.AtomicIntegerArray;
 

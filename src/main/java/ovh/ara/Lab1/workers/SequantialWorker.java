@@ -1,4 +1,4 @@
-package ovh.ara.workers;
+package ovh.ara.Lab1.workers;
 public class SequantialWorker implements IWorker {
     private int offset;
     private int size;
