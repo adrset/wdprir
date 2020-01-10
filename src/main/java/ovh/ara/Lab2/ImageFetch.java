@@ -9,7 +9,6 @@ import java.awt.image.ConvolveOp;
 import java.awt.image.Kernel;
 import java.net.URL;
 import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.atomic.AtomicIntegerArray;
 
 public class ImageFetch implements Runnable, ILatchable {
     private String uri;
