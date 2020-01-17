@@ -18,7 +18,7 @@ public class Main {
     private int iterations = 0;
     private int currentIteration = 0;
     private int maxBlockSize = 0;
-
+    private int choice = 0;
 
     IAdder adder;
 
@@ -47,7 +47,7 @@ public class Main {
         this.retries = Integer.parseInt(s);
         System.out.println("Sync/Threaded/Race/ConstPoolThreaded/RaceAdderWitBlocks (1/2/3/4/5)");
         s = br.readLine();
-        int choice = Integer.parseInt(s);
+        choice = Integer.parseInt(s);
         if (choice == 1) {
             adder = new SynchronousAdder();
         } else if (choice == 2) {
@@ -104,13 +104,16 @@ public class Main {
             adder.setCurrentIteration(iterations);
             this.timeAverages = new double[maxBlockSize];
             while (currentIteration < maxBlockSize) {
-                blockAdder.setBlockSize(currentIteration);
-                adder.init();
                 double average = 0;
+
                 for (int ii=0;ii<this.retries;ii++){
+                    blockAdder.setBlockSize(currentIteration);
+                    adder.init();
+
                     double startTime = System.nanoTime();
                     try {
                         double val = adder.add();
+                      // System.out.println(val);
 
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -136,7 +139,7 @@ public class Main {
             return;
         }
 
-        FileWriter writer = new FileWriter(new File("output" + (adder instanceof SynchronousAdder) + ".txt"));
+        FileWriter writer = new FileWriter(new File("output" + (choice) + ".txt"));
         BufferedWriter outputWriter = null;
         outputWriter = new BufferedWriter(writer);
 

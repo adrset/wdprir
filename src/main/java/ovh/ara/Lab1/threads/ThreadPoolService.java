@@ -30,7 +30,7 @@ public class ThreadPoolService implements IThreadService {
 
     public void await() throws Exception{
         latch.await();
-        System.out.println("count 0");
+       // System.out.println("count 0");
     }
 
 
