@@ -10,32 +10,51 @@ import java.util.regex.Pattern;
 
 public class Lab2 {
 
-	IThreadService service = new ThreadPoolService();
+	IThreadService service = new ThreadPoolService(512);
 	IBatchURLFetcher imageService = new SoupImageLinkFetcher();
 
 	public Lab2() {
-		HttpFetcher fetcher = HttpFetcher.getInstance();
 
 		List<String> images = imageService
-				.getContents("http://www.if.pw.edu.pl/~akraw/gallery/holidays2006.html");
+				.getContents("http://if.pw.edu.pl/~wierzba/zdjecia/erice/index.html");
 		List<ImageFetch> fetchers = new ArrayList<>();
 		for (int ii = 0; ii < images.size(); ii++) {
-			fetchers.add(new ImageFetch(images.get(ii)));
+			fetchers.add(new ImageFetch(images.get(ii), new GaussFilter()));
 		}
 
-		service.init(images.size());
-		for (int ii = 0; ii < images.size(); ii++) {
-			fetchers.get(ii).setLatch(service.getLatch());
-			service.submit(fetchers.get(ii));
+		float averages[] = new float[10];
+		for (int i=0;i<10;i++){
+
+			service.init(images.size());
+			for (int ii = 0; ii < images.size(); ii++) {
+				fetchers.get(ii).setLatch(service.getLatch());
+				service.submit(fetchers.get(ii));
+			}
+			double startTime = System.nanoTime();
+
+			try {
+				service.await();
+
+				double timeElapsed = System.nanoTime() - startTime;
+				System.out.println( String.format("%.02f", timeElapsed * Math.pow(10,-9)) + " s");
+
+
+				averages[i] = (float) (timeElapsed * Math.pow(10,-9));
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 
-		try {
-			service.await();
-			service.shutdown();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		System.out.println("Average" + String.format("%.02f", getAverage(averages)) + " s");
+		service.shutdown();
+	}
 
+	public float getAverage(float tab[]){
+		float av = 0;
+		for (float f: tab){
+			av+=f;
+		}
+		return av / ((float) tab.length);
 	}
 
 	public static void main(String[] args) throws Exception {

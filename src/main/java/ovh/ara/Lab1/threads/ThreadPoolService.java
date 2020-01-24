@@ -10,8 +10,12 @@ public class ThreadPoolService implements IThreadService {
     private int processors;
 
     public ThreadPoolService(){
-        processors = Runtime.getRuntime().availableProcessors();
+        this ( Runtime.getRuntime().availableProcessors());
+    }
+
+    public ThreadPoolService(int processors){
         executor = Executors.newFixedThreadPool(processors);
+        System.out.println("Creating thread pool of size "+ processors);
     }
 
     public void init() {
